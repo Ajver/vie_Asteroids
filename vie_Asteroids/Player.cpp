@@ -1,16 +1,22 @@
 #include "Player.h"
 
 #include <vie/Input.h>
+#include <vie/ObjectsManager.h>
+#include <vie/Window.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
-Player::Player() :
+#include "Bullet.h"
+
+Player::Player(vie::ObjectsManager* nom) :
+	om(nom),
 	rotate(0),
 	rotateVel(0),
-	shipTexture("Graphics/spaceship.png")
+	shipTexture("Graphics/spaceship.png"),
+	nextShotTimer(500)
 {
-	position = { 0, 0 };
+	position = vie::Window::getScreenSize() * 0.5f;
 	size = { 128, 128 };
 }
 
@@ -25,6 +31,23 @@ void Player::update(float et)
 
 	position += velocity * et;
 	rotate += rotateVel * et;
+
+	if (position.x < 0)
+		position.x = vie::Window::getScreenWidth();
+	else if (position.x > vie::Window::getScreenWidth())
+		position.x = 0;
+
+	if (position.y < 0)
+		position.y = vie::Window::getScreenHeight();
+	else if (position.y > vie::Window::getScreenHeight())
+		position.y = 0;
+
+	if(vie::Input::isKeyPressed(SDLK_SPACE))
+		if (nextShotTimer.tick())
+		{
+			nextShotTimer.restart();
+			shot();
+		}
 }
 
 void Player::render(vie::Graphics* g)
@@ -60,4 +83,15 @@ void Player::setRotateVel()
 	else if (vie::Input::isKeyPressed(SDLK_d) ||
 		vie::Input::isKeyPressed(SDLK_RIGHT))
 		rotateVel = ROTATE_SPEED;
+}
+
+void Player::shot()
+{
+	glm::vec2 newBulletPos(0);
+	newBulletPos.y -= size.y * 0.5f;
+	newBulletPos = glm::rotate(newBulletPos, rotate);
+	newBulletPos += position;
+
+	Bullet * b = new Bullet(om, newBulletPos, rotate);
+	om->appendObject(b);
 }
