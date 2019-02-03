@@ -1,11 +1,13 @@
 #include "Bullet.h"
 
 #include <vie/ObjectsManager.h>
+#include <vie/Window.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 
 #include "Asteroid.h"
+#include "Player.h"
 
 Bullet::Bullet(vie::ObjectsManager* nom, const glm::vec2& npos, float nrotate) :
 	om(nom),
@@ -37,9 +39,9 @@ void Bullet::update(float et)
 		{
 			float d = glm::distance(position, ob->getPosition());
 
-			if (d <= (size.x + ob->getSize().x) * 0.5f)
+			if (d <= ob->getSize().x * 0.5f)
 			{
-				if (ob->getSize().x > 32)
+				if (ob->getSize().x > 64)
 				{
 					glm::vec2 pos = ob->getPosition();
 					glm::vec2 siz = ob->getSize() * 0.5f;
@@ -48,14 +50,20 @@ void Bullet::update(float et)
 				}
 				else
 				{
-					// Add points
+					Player::nextPoint();
 				}
 				om->removeObject(ob);
 				om->removeObject(this);
+				return;
 			}
 		}
 	}
 
+	if(position.x < 0 || 
+		position.x > vie::Window::getScreenWidth() ||
+		position.y < 0 || 
+		position.y > vie::Window::getScreenHeight())
+		om->removeObject(this);
 }
 
 void Bullet::render(vie::Graphics* g)

@@ -9,13 +9,17 @@
 
 #include "Bullet.h"
 
+int Player::points;
+
 Player::Player(vie::ObjectsManager* nom) :
 	om(nom),
 	rotate(0),
 	rotateVel(0),
 	shipTexture("Graphics/spaceship.png"),
-	nextShotTimer(500)
+	nextShotTimer(200)
 {
+	points = 0;
+
 	position = vie::Window::getScreenSize() * 0.5f;
 	size = { 128, 128 };
 }
@@ -61,28 +65,40 @@ void Player::render(vie::Graphics* g)
 
 void Player::setVelocity()
 {
-	static const float FORCE = -200.0f;
-
-	velocity.x = 0;
-	velocity.y = 0;
+	static const float FORCE = -50.0f;
 
 	if (vie::Input::isKeyPressed(SDLK_w) ||
 		vie::Input::isKeyPressed(SDLK_UP))
-		velocity = glm::rotate(glm::vec2(0, FORCE), rotate);
+	{
+		velocity += glm::rotate(glm::vec2(0, FORCE), rotate);
+		if (glm::length(velocity) > 500.0f)
+			velocity = glm::normalize(velocity) * 500.0f;
+	}
+	else
+		velocity *= 0.95f;
 }
 
 void Player::setRotateVel()
 {
-	static const float ROTATE_SPEED = 2.0f;
-
-	rotateVel = 0;
+	static const float ROTATE_SPEED = 0.5f;
+	static const float MAX_ROTATE_SPEED = 4.0f;
 
 	if (vie::Input::isKeyPressed(SDLK_a) ||
 		vie::Input::isKeyPressed(SDLK_LEFT))
-		rotateVel = -ROTATE_SPEED;
+	{
+		rotateVel -= ROTATE_SPEED;
+		if (rotateVel < -MAX_ROTATE_SPEED)
+			rotateVel = -MAX_ROTATE_SPEED;
+	}
 	else if (vie::Input::isKeyPressed(SDLK_d) ||
 		vie::Input::isKeyPressed(SDLK_RIGHT))
-		rotateVel = ROTATE_SPEED;
+	{
+		rotateVel += ROTATE_SPEED;
+		if (rotateVel > MAX_ROTATE_SPEED)
+			rotateVel = MAX_ROTATE_SPEED;
+	}
+	else
+		rotateVel *= 0.9f;
 }
 
 void Player::shot()
@@ -94,4 +110,9 @@ void Player::shot()
 
 	Bullet * b = new Bullet(om, newBulletPos, rotate);
 	om->appendObject(b);
+}
+
+void Player::nextPoint()
+{
+	points++;
 }

@@ -16,6 +16,8 @@ public:
 
 	void update(float et) override;
 	void render(vie::Graphics* g) override;
+	
+	static void nextPoint();
 
 private:
 	Player();
@@ -25,6 +27,8 @@ private:
 	vie::Texture shipTexture;
 	vie::ObjectsManager* om;
 	vie::Timer nextShotTimer;
+
+	static int points;
 
 	void setVelocity();
 	void setRotateVel();
