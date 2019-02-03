@@ -12,7 +12,7 @@ Bullet::Bullet(vie::ObjectsManager* nom, const glm::vec2& npos, float nrotate) :
 	position = npos;
 	size = { 16, 16 };
 	
-	velocity = glm::rotate(glm::vec2(0.0f, -100.0f), rotate);
+	velocity = glm::rotate(glm::vec2(0.0f, -30.0f), rotate);
 }
 
 Bullet::Bullet()
