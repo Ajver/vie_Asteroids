@@ -12,6 +12,7 @@ class Asteroid : public vie::Object
 {
 public:
 	Asteroid(vie::ObjectsManager* nom, const glm::vec2& nsize = {128, 128});
+	Asteroid(vie::ObjectsManager* nom, const glm::vec2& npos, const glm::vec2& nsize);
 	~Asteroid();
 
 	void update(float et) override;

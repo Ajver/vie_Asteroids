@@ -22,6 +22,25 @@ Asteroid::Asteroid(vie::ObjectsManager* nom, const glm::vec2& nsize) :
 	velocity.x = vie::Random::nextFloat() - 0.5f;
 	velocity.y = vie::Random::nextFloat() - 0.5f;
 	velocity *= 200.0f;
+
+	label = "asteroid";
+}
+
+Asteroid::Asteroid(vie::ObjectsManager* nom, const glm::vec2& npos, const glm::vec2& nsize) :
+	om(nom),
+	rotateVel(vie::Random::nextFloat()),
+	animationStep(vie::Random::nextInt(64)),
+	animationTimer(vie::Random::nextInt(200, 700))
+{
+	size = nsize;
+
+	position = npos;
+
+	velocity.x = vie::Random::nextFloat() - 0.5f;
+	velocity.y = vie::Random::nextFloat() - 0.5f;
+	velocity *= 200.0f;
+
+	label = "asteroid";
 }
 
 Asteroid::Asteroid()
