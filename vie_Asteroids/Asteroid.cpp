@@ -88,8 +88,8 @@ void Asteroid::loadTextures()
 	vie::Texture ss("Graphics/asteroids-sprites.png");
 	for (int i = 0; i < 64; i++)
 	{
-		int x = 128 * (i % 8);
-		int y = 128 * (i / 8);
-		asteroidTextures[i] = ss.getSubTexture(x, y, 128, 128);
+		int x = 32 * (i % 8);
+		int y = 32 * (i / 8);
+		asteroidTextures[i] = ss.getSubTexture(x, y, 32, 32);
 	}
 }
